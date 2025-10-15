@@ -1,0 +1,374 @@
+<!doctype html><html><head></head><body><!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Open Note</title>
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Fira Code', monospace;
+		}
+
+		html,
+		body {
+			height: 100%;
+			width: 100%;
+			overflow: hidden;
+		}
+
+		body {
+			display: flex;
+			flex-direction: column;
+		}
+
+		:root {
+			--theme-color: #007acc;
+		}
+
+		.top-bar {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 70px;
+			z-index: 100;
+			background: #1b1b1b;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 15px 20px;
+		}
+
+		#noteTitle {
+			font-size: 2rem;
+			margin: 0;
+			transition: color 0.2s ease;
+		}
+
+		#settingsBtn {
+			background: var(--theme-color);
+			color: white;
+			border: none;
+			border-radius: 4px;
+			padding: 5px 10px;
+			cursor: pointer;
+			font-size: 0.9rem;
+			transition: background 0.2s ease, color 0.2s ease;
+		}
+
+		#settingsMenu {
+			display: none;
+			position: absolute;
+			top: 60px;
+			right: 20px;
+			background: #2a2a2a;
+			border: 1px solid #3c3c3c;
+			border-radius: 5px;
+			padding: 10px;
+			width: 220px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+			font-size: 1rem;
+		}
+
+		#settingsMenu label,
+		#settingsMenu input,
+		#settingsMenu button {
+			display: block;
+			margin-bottom: 10px;
+			width: 100%;
+			color: #d4d4d4;
+			font-size: 1rem;
+		}
+
+		#settingsMenu button {
+			border: none;
+			border-radius: 4px;
+			padding: 5px;
+			cursor: pointer;
+			text-align: center;
+			transition: background 0.2s ease;
+		}
+
+		#settingsMenu button:hover {
+			filter: brightness(85%);
+		}
+
+		.editor-container {
+			display: flex;
+			width: 100%;
+			line-height: 1.5;
+			margin-top: 70px;
+			height: calc(100vh - 70px);
+			overflow: hidden;
+		}
+
+		.line-numbers {
+			padding: 20px 10px 20px 15px;
+			text-align: right;
+			user-select: none;
+			white-space: pre;
+			border-right: 1px solid #3c3c3c;
+			line-height: 1.5;
+			overflow-y: auto;
+			overflow: hidden;
+		}
+
+		textarea {
+			flex-grow: 1;
+			padding: 20px;
+			border: none;
+			resize: none;
+			font-family: 'Fira Code', monospace;
+			font-size: 1rem;
+			line-height: 1.5;
+			outline: none;
+			white-space: pre;
+			overflow: auto;
+			box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+			transition: background 0.2s ease, color 0.2s ease;
+		}
+
+		textarea:focus {
+			outline: 2px solid var(--theme-color);
+			box-shadow: inset 0 0 5px rgba(0, 122, 204, 0.3);
+		}
+
+		#settingsMenu input[type="range"] {
+			-webkit-appearance: none;
+			width: 100%;
+			height: 5px;
+			border-radius: 4px;
+			background: #555;
+			outline: none;
+			margin-bottom: 15px;
+			position: relative;
+		}
+
+		#settingsMenu input[type="range"]::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			width: 12px;
+			height: 12px;
+			border-radius: 100%;
+			background: var(--theme-color);
+			cursor: pointer;
+			border: 1px solid #808080;
+			box-sizing: border-box;
+			transition: background 0.1s, transform 0.1s;
+			margin-top: 0px;
+		}
+
+		#settingsMenu input[type="range"]::-moz-range-thumb {
+			width: 16px;
+			height: 16px;
+			border-radius: 50%;
+			background: var(--theme-color);
+			cursor: pointer;
+			border: 2px solid #fff;
+			box-sizing: border-box;
+			transition: background 0.3s, transform 0.2s;
+		}
+
+		#settingsMenu input[type="range"]::-moz-range-thumb:hover {
+			transform: scale(1.2);
+		}
+
+		#settingsMenu input[type="range"]::-moz-range-track {
+			height: 8px;
+			border-radius: 4px;
+			background: #555;
+			margin-top: -4px;
+		}
+
+		/* Remove black outline from color picker */
+		#settingsMenu input[type="color"] {
+			border: none;
+			appearance: none;
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			padding: 0;
+			width: 100%;
+			height: 30px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="top-bar">
+		<h1 id="noteTitle">Open Note</h1>
+		<button id="settingsBtn">Settings</button>
+		<div id="settingsMenu">
+			<label for="colorPicker">Theme Color:</label>
+			<input type="color" id="colorPicker">
+
+			<label for="headerSlider">Title Background:</label>
+			<input type="range" id="headerSlider" min="0" max="255" value="30">
+
+			<label for="editorSlider">Editor Background:</label>
+			<input type="range" id="editorSlider" min="0" max="255" value="30">
+
+			<button id="exportBtn">Export Text</button>
+			<button id="importBtn">Import Text</button>
+		</div>
+	</div>
+
+	<div class="editor-container">
+		<div class="line-numbers" id="lineNumbers">1</div>
+		<textarea id="editor" placeholder="Type notes or lines of code here..."></textarea>
+	</div>
+
+	<script>
+		const textarea = document.getElementById('editor');
+		const lineNumbers = document.getElementById('lineNumbers');
+		const settingsBtn = document.getElementById('settingsBtn');
+		const settingsMenu = document.getElementById('settingsMenu');
+		const colorPicker = document.getElementById('colorPicker');
+		const headerSlider = document.getElementById('headerSlider');
+		const editorSlider = document.getElementById('editorSlider');
+		const noteTitle = document.getElementById('noteTitle');
+		const importBtn = document.getElementById('importBtn');
+		const exportBtn = document.getElementById('exportBtn');
+
+		textarea.value = localStorage.getItem('open_note_content') || '';
+		let themeColor = localStorage.getItem('open_note_theme') || '#007acc';
+		let headerValue = localStorage.getItem('header_bg') || 30;
+		let editorValue = localStorage.getItem('editor_bg') || 30;
+
+		function getContrastColor(hex) {
+			const r = parseInt(hex.substr(1, 2), 16);
+			const g = parseInt(hex.substr(3, 2), 16);
+			const b = parseInt(hex.substr(5, 2), 16);
+			return (r * 299 + g * 587 + b * 114) / 1000 > 155 ? '#000' : '#fff';
+		}
+
+		function applyThemeColor(color) {
+			document.documentElement.style.setProperty('--theme-color', color);
+			settingsBtn.style.background = color;
+			settingsBtn.style.color = getContrastColor(color);
+			noteTitle.style.color = color;
+
+			// Sync settings menu buttons
+			exportBtn.style.background = color;
+			exportBtn.style.color = getContrastColor(color);
+			importBtn.style.background = color;
+			importBtn.style.color = getContrastColor(color);
+
+			// Slider thumbs
+			const style = document.createElement('style');
+			style.id = 'sliderThumbStyle';
+			style.innerHTML = `
+				#settingsMenu input[type="range"]::-webkit-slider-thumb { background: ${color}; }
+				#settingsMenu input[type="range"]::-moz-range-thumb { background: ${color}; }
+			`;
+			const oldStyle = document.getElementById('sliderThumbStyle');
+			if (oldStyle) oldStyle.remove();
+			document.head.appendChild(style);
+		}
+
+		applyThemeColor(themeColor);
+		colorPicker.value = themeColor;
+
+		function updateLineNumbers() {
+			const lines = textarea.value.split('\n').length || 1;
+			lineNumbers.textContent = Array.from({ length: lines }, (_, i) => i + 1).join('\n');
+		}
+
+		function applyHeaderBackground(value) {
+			document.querySelector('.top-bar').style.backgroundColor = `rgb(${value},${value},${value})`;
+		}
+
+		function applyEditorBackground(value) {
+			textarea.style.backgroundColor = `rgb(${value},${value},${value})`;
+			textarea.style.color = value < 128 ? '#d4d4d4' : '#1a1a1a';
+			const lnValue = Math.max(0, value - 20);
+			lineNumbers.style.backgroundColor = `rgb(${lnValue},${lnValue},${lnValue})`;
+			lineNumbers.style.color = lnValue < 128 ? '#d4d4d4' : '#1a1a1a';
+		}
+
+		function updateSettingsMenuBackground() {
+			const rgb = headerSlider.value;
+			settingsMenu.style.backgroundColor = `rgb(${rgb},${rgb},${rgb})`;
+			settingsMenu.style.color = rgb < 128 ? '#d4d4d4' : '#1a1a1a';
+
+			// Sync color picker's box with menu
+			colorPicker.style.backgroundColor = `rgb(${rgb},${rgb},${rgb})`;
+			colorPicker.style.color = rgb < 128 ? '#d4d4d4' : '#1a1a1a';
+		}
+
+		textarea.addEventListener('scroll', () => lineNumbers.scrollTop = textarea.scrollTop);
+		textarea.addEventListener('input', () => {
+			localStorage.setItem('open_note_content', textarea.value);
+			updateLineNumbers();
+		});
+
+		settingsBtn.addEventListener('click', () => {
+			settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block';
+		});
+
+		colorPicker.addEventListener('input', e => {
+			themeColor = e.target.value;
+			applyThemeColor(themeColor);
+			localStorage.setItem('open_note_theme', themeColor);
+			updateSettingsMenuBackground();
+		});
+
+		headerSlider.addEventListener('input', e => {
+			headerValue = e.target.value;
+			applyHeaderBackground(headerValue);
+			localStorage.setItem('header_bg', headerValue);
+			updateSettingsMenuBackground();
+		});
+
+		editorSlider.addEventListener('input', e => {
+			editorValue = e.target.value;
+			applyEditorBackground(editorValue);
+			localStorage.setItem('editor_bg', editorValue);
+		});
+
+		updateLineNumbers();
+		applyHeaderBackground(headerValue);
+		applyEditorBackground(editorValue);
+		updateSettingsMenuBackground();
+
+		document.addEventListener('click', e => {
+			if (!settingsBtn.contains(e.target) && !settingsMenu.contains(e.target)) {
+				settingsMenu.style.display = 'none';
+			}
+		});
+
+		exportBtn.addEventListener('click', () => {
+			const blob = new Blob([textarea.value], { type: 'text/plain' });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = 'OpenNoteUntitled.txt';
+			a.click();
+			URL.revokeObjectURL(url);
+		});
+
+		importBtn.addEventListener('click', () => {
+			const fileInput = document.createElement('input');
+			fileInput.type = 'file';
+			fileInput.accept = '.txt';
+			fileInput.onchange = e => {
+				const file = e.target.files[0];
+				if (!file) return;
+				const reader = new FileReader();
+				reader.onload = ev => {
+					textarea.value = ev.target.result;
+					localStorage.setItem('open_note_content', textarea.value);
+					updateLineNumbers();
+				};
+				reader.readAsText(file);
+			};
+			fileInput.click();
+		});
+	</script>
+</body>
+
+</html><script type="text/javascript"></script></body><html>
