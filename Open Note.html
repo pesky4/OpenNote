@@ -357,6 +357,22 @@
             };
             fileInput.click();
         });
+
+    document.querySelector('textarea').addEventListener('keydown', function (e) {
+      if (e.key === 'Tab') {
+        e.preventDefault(); 
+        var start = this.selectionStart;
+        var end = this.selectionEnd;
+        var target = e.target;
+        var value = target.value;
+
+        target.value = value.substring(0, start) + "\t" + value.substring(end);
+
+        this.selectionStart = this.selectionEnd = start + 1;
+  }
+});
+
+
 	</script>
 </body>
 
