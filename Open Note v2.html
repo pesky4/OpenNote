@@ -9,18 +9,15 @@
 	<style>
 		:root {
 			--accent: #007acc;
-			--bg-header: #1b1b1b;
-			--bg-editor: #1e1e1e;
-			--text-header: #ffffff;
-			--text-editor: #d4d4d4;
+			--bg-ui: #1e1e1e;
+			--text-main: #d4d4d4;
 			--text-gutter: #606060;
-			--text-footer: #ffffff;
 			--active-line-text: #ffffff;
+			--ui-outline: #ffffff;
 			--dynamic-outline: rgba(255, 255, 255, 0.4);
 			--slider-contrast: rgba(255, 255, 255, 0.2);
 			--btn-secondary-bg: rgba(127, 127, 127, 0.2);
 			--text-placeholder: rgba(255, 255, 255, 0.3);
-			/* Logic-driven Glow Variable */
 			--logo-glow: none;
 		}
 
@@ -29,30 +26,14 @@
 			margin: 0;
 			padding: 0;
 			font-family: 'Fira Code', monospace;
-			/* Font Sharpness Fix */
 			-webkit-font-smoothing: antialiased;
 			-moz-osx-font-smoothing: grayscale;
 			text-rendering: optimizeLegibility;
 		}
 
-		::-webkit-scrollbar {
-			width: 10px;
-		}
-
-		::-webkit-scrollbar-track {
-			background: transparent;
-		}
-
-		::-webkit-scrollbar-thumb {
-			background: var(--accent);
-			border-radius: 10px;
-			border: 3px solid transparent;
-			background-clip: content-box;
-		}
-
 		body {
-			background: #121212;
-			color: var(--text-editor);
+			background: var(--bg-ui);
+			color: var(--text-main);
 			height: 100vh;
 			display: flex;
 			flex-direction: column;
@@ -62,12 +43,12 @@
 
 		header {
 			height: 60px;
-			background: var(--bg-header);
+			background: var(--bg-ui);
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
 			padding: 0 20px;
-			border-bottom: 1px solid rgba(127, 127, 127, 0.1);
+			border-bottom: 2px solid var(--ui-outline);
 			z-index: 1001;
 		}
 
@@ -77,7 +58,6 @@
 			font-size: 1.35rem;
 			letter-spacing: -0.5px;
 			user-select: none;
-			/* Dynamic shadow multi-layered to prevent blurriness */
 			text-shadow: var(--logo-glow);
 			transition: text-shadow 0.15s ease-out;
 			transform: translateZ(0);
@@ -85,7 +65,7 @@
 
 		.btn {
 			background: var(--accent);
-			color: var(--text-footer);
+			color: #ffffff;
 			border: none;
 			padding: 8px 16px;
 			border-radius: 6px;
@@ -101,13 +81,13 @@
 
 		.btn.secondary {
 			background: var(--btn-secondary-bg);
-			color: var(--text-header);
+			color: var(--text-main);
 		}
 
 		.btn.danger {
 			background: var(--btn-secondary-bg);
 			border: 1px solid var(--accent);
-			color: var(--text-header);
+			color: var(--text-main);
 			margin-top: 8px;
 			width: 100%;
 			padding: 6px;
@@ -124,7 +104,7 @@
 		.editor-container {
 			flex: 1;
 			display: flex;
-			background: var(--bg-editor);
+			background: var(--bg-ui);
 			overflow: hidden;
 		}
 
@@ -139,7 +119,7 @@
 			font-size: 14px;
 			line-height: 1.6;
 			user-select: none;
-			border-right: 1px solid rgba(0, 0, 0, 0.05);
+			border-right: 2px solid var(--ui-outline);
 			overflow: hidden;
 			white-space: nowrap;
 		}
@@ -152,7 +132,7 @@
 		#editor {
 			flex: 1;
 			background: transparent;
-			color: var(--text-editor);
+			color: var(--text-main);
 			border: none;
 			outline: none;
 			padding: 20px;
@@ -162,9 +142,8 @@
 			resize: none;
 			white-space: pre;
 			overflow-y: auto;
-			caret-color: var(--text-editor);
+			caret-color: var(--text-main);
 			tab-size: 4;
-			-moz-tab-size: 4;
 		}
 
 		#editor::placeholder {
@@ -174,14 +153,15 @@
 
 		footer {
 			height: 40px;
-			background: var(--accent);
-			color: var(--text-footer);
+			background: var(--bg-ui);
+			color: var(--text-main);
 			display: grid;
 			grid-template-columns: 1fr auto 1fr;
 			align-items: center;
 			padding: 0 20px;
 			font-size: 0.8rem;
 			font-weight: 700;
+			border-top: 2px solid var(--ui-outline);
 		}
 
 		.footer-left {
@@ -218,9 +198,9 @@
 			position: absolute;
 			top: 65px;
 			right: 20px;
-			background: var(--bg-header);
-			color: var(--text-header);
-			border: 1px solid rgba(127, 127, 127, 0.2);
+			background: var(--bg-ui);
+			color: var(--text-main);
+			border: 1px solid var(--dynamic-outline);
 			border-radius: 10px;
 			padding: 18px;
 			width: 240px;
@@ -259,7 +239,7 @@
 			appearance: none;
 			width: 14px;
 			height: 14px;
-			background: var(--text-header);
+			background: var(--text-main);
 			border-radius: 50%;
 			cursor: pointer;
 		}
@@ -272,9 +252,9 @@
 
 <body>
 
-	<header id="appHeader">
+	<header>
 		<div class="logo">Open Note</div>
-		<button class="btn secondary" id="settingsBtn" onclick="toggleMenu(event)">Settings</button>
+		<button class="btn secondary" onclick="toggleMenu(event)">Settings</button>
 
 		<div id="settingsMenu" onclick="event.stopPropagation()">
 			<div class="section-title">Appearance:</div>
@@ -283,24 +263,20 @@
 				<input type="color" id="accentInput" value="#007acc" style="width:100%; height:28px; border:none; border-radius:4px; background:none; cursor:pointer;">
       </div>
 				<div class="menu-item">
-					<label>Header brightness:</label>
-					<input type="range" id="headerSlider" min="0" max="255" value="27">
-      </div>
-					<div class="menu-item">
-						<label>Editor brightness:</label>
-						<input type="range" id="editorSlider" min="0" max="255" value="30">
+					<label>UI brightness:</label>
+					<input type="range" id="uiSlider" min="0" max="255" value="30">
       </div>
 
-						<button class="btn danger" id="resetBtn" onclick="resetTheme()">Reset Theme</button>
+					<button class="btn danger" onclick="resetTheme()">Reset Theme</button>
 
-						<hr style="border:0; height:1px; background:rgba(127,127,127,0.2); margin:15px 0;">
+					<hr style="border:0; height:1px; background:var(--dynamic-outline); margin:15px 0;">
 
-						<div class="section-title">File Options:</div>
-						<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-							<button class="btn secondary" style="padding: 6px;" onclick="importDoc()">Import</button>
-							<button class="btn secondary" style="padding: 6px;" onclick="exportDoc()">Export</button>
-						</div>
+					<div class="section-title">File Options:</div>
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+						<button class="btn secondary" style="padding: 6px;" onclick="importDoc()">Import</button>
+						<button class="btn secondary" style="padding: 6px;" onclick="exportDoc()">Export</button>
 					</div>
+				</div>
 	</header>
 
 	<div class="editor-container">
@@ -330,13 +306,13 @@
       const lines = val.split('\n');
       const cursorPosition = editor.selectionStart;
       const currentLine = val.substr(0, cursorPosition).split('\n').length;
-      
+
       let nums = '';
       for (let i = 1; i <= lines.length; i++) {
         const activeClass = (i === currentLine) ? 'active-line' : '';
         nums += `<div class="${activeClass}">${i}</div>`;
       }
-      
+
       gutter.innerHTML = nums;
       document.getElementById('stats').innerText = `Lines: ${lines.length} | Chars: ${val.length}`;
       localStorage.setItem('op_content_simple', val);
@@ -363,75 +339,59 @@
     }
 
     function hexToRgb(hex) {
-      const r = parseInt(hex.slice(1,3), 16);
-      const g = parseInt(hex.slice(3,5), 16);
-      const b = parseInt(hex.slice(5,7), 16);
-      return {r, g, b};
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return { r, g, b };
     }
 
     function applyTheme() {
       const acc = document.getElementById('accentInput').value;
-      const headV = parseInt(document.getElementById('headerSlider').value);
-      const editV = parseInt(document.getElementById('editorSlider').value);
+      const uiV = parseInt(document.getElementById('uiSlider').value);
 
       document.documentElement.style.setProperty('--accent', acc);
-      document.documentElement.style.setProperty('--bg-header', `rgb(${headV},${headV},${headV})`);
-      document.documentElement.style.setProperty('--bg-editor', `rgb(${editV},${editV},${editV})`);
+      document.documentElement.style.setProperty('--bg-ui', `rgb(${uiV},${uiV},${uiV})`);
+
+      const contrastColor = uiV > 130 ? '#000000' : '#ffffff';
+      const secondaryText = uiV > 130 ? '#1a1a1a' : '#d4d4d4';
+      const contrastBg = uiV > 130 ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.2)';
+      const placeholder = uiV > 130 ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.3)';
       
-      const headText = headV > 130 ? '#1a1a1a' : '#ffffff';
-      const contrastBg = headV > 130 ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.2)';
-      
+      document.documentElement.style.setProperty('--text-main', secondaryText);
+      document.documentElement.style.setProperty('--ui-outline', contrastColor);
+      document.documentElement.style.setProperty('--active-line-text', contrastColor);
+      document.documentElement.style.setProperty('--slider-contrast', contrastBg);
+      document.documentElement.style.setProperty('--btn-secondary-bg', contrastBg);
+      document.documentElement.style.setProperty('--text-placeholder', placeholder);
+      document.documentElement.style.setProperty('--dynamic-outline', uiV > 130 ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)');
+
       const accRgb = hexToRgb(acc);
-      const colorDist = Math.abs(accRgb.r - headV) + Math.abs(accRgb.g - headV) + Math.abs(accRgb.b - headV);
-      
+      const colorDist = Math.abs(accRgb.r - uiV) + Math.abs(accRgb.g - uiV) + Math.abs(accRgb.b - uiV);
+
       if (colorDist < 135) {
-        const shadowColor = headV > 130 ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.4)';
+        const shadowColor = uiV > 130 ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.4)';
         document.documentElement.style.setProperty('--logo-glow', `1px 1px 0px ${shadowColor}, -1px -1px 0px ${shadowColor}, 0 0 8px ${shadowColor}`);
       } else {
         document.documentElement.style.setProperty('--logo-glow', 'none');
       }
 
-      document.documentElement.style.setProperty('--text-header', headText);
-      document.documentElement.style.setProperty('--slider-contrast', contrastBg);
-      document.documentElement.style.setProperty('--btn-secondary-bg', contrastBg);
-      
-      const editText = editV > 130 ? '#1a1a1a' : '#d4d4d4';
-      const placeholderColor = editV > 130 ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.3)';
-      
-      document.documentElement.style.setProperty('--text-editor', editText);
-      document.documentElement.style.setProperty('--text-placeholder', placeholderColor);
-      
-      const activeLineText = editV > 130 ? '#000000' : '#ffffff';
-      document.documentElement.style.setProperty('--active-line-text', activeLineText);
-
-      const r = parseInt(acc.slice(1,3), 16), g = parseInt(acc.slice(3,5), 16), b = parseInt(acc.slice(5,7), 16);
-      const bright = (r*299 + g*587 + b*114) / 1000;
-      const contrastColor = bright > 150 ? '#000000' : '#ffffff';
-      document.documentElement.style.setProperty('--text-footer', contrastColor);
-      document.documentElement.style.setProperty('--dynamic-outline', contrastColor === '#000000' ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)');
-
       localStorage.setItem('op_theme_accent', acc);
-      localStorage.setItem('op_theme_header_val', headV);
-      localStorage.setItem('op_theme_editor_val', editV);
+      localStorage.setItem('op_theme_ui_val', uiV);
     }
 
     function resetTheme() {
       if (confirm("Reset theme to default?")) {
         localStorage.removeItem('op_theme_accent');
-        localStorage.removeItem('op_theme_header_val');
-        localStorage.removeItem('op_theme_editor_val');
-        
+        localStorage.removeItem('op_theme_ui_val');
         document.getElementById('accentInput').value = "#007acc";
-        document.getElementById('headerSlider').value = "27";
-        document.getElementById('editorSlider').value = "30";
-        
+        document.getElementById('uiSlider').value = "30";
         applyTheme();
       }
     }
 
     function exportDoc() {
       const name = fileNameInput.value.trim() || "Note";
-      const blob = new Blob([editor.value], {type: 'text/plain'});
+      const blob = new Blob([editor.value], { type: 'text/plain' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = `${name}.txt`;
@@ -444,10 +404,10 @@
       input.onchange = e => {
         const file = e.target.files[0];
         const reader = new FileReader();
-        reader.onload = ev => { 
-          editor.value = ev.target.result; 
+        reader.onload = ev => {
+          editor.value = ev.target.result;
           fileNameInput.value = file.name.replace(/\.[^/.]+$/, "");
-          updateEditor(); 
+          updateEditor();
         };
         reader.readAsText(file);
       };
@@ -455,10 +415,8 @@
     }
 
     window.onclick = () => settingsMenu.style.display = 'none';
-
     document.getElementById('accentInput').addEventListener('input', applyTheme);
-    document.getElementById('headerSlider').addEventListener('input', applyTheme);
-    document.getElementById('editorSlider').addEventListener('input', applyTheme);
+    document.getElementById('uiSlider').addEventListener('input', applyTheme);
 
     window.onload = () => {
       const savedText = localStorage.getItem('op_content_simple');
@@ -467,12 +425,10 @@
       if (savedName) fileNameInput.value = savedName;
 
       const savedAccent = localStorage.getItem('op_theme_accent');
-      const savedHeadVal = localStorage.getItem('op_theme_header_val');
-      const savedEditVal = localStorage.getItem('op_theme_editor_val');
+      const savedUiVal = localStorage.getItem('op_theme_ui_val');
 
       if (savedAccent) document.getElementById('accentInput').value = savedAccent;
-      if (savedHeadVal) document.getElementById('headerSlider').value = savedHeadVal;
-      if (savedEditVal) document.getElementById('editorSlider').value = savedEditVal;
+      if (savedUiVal) document.getElementById('uiSlider').value = savedUiVal;
 
       applyTheme();
       updateEditor();
