@@ -289,7 +289,7 @@
 			<div id="stats">Lines: 1 | Chars: 0</div>
 		</div>
 		<div class="filename-container">
-			<input type="text" id="fileNameInput" placeholder="Untitled" value="Untitled-Note">
+			<input type="text" id="fileNameInput" placeholder="Untitled-Note" value="Untitled-Note">
 			<span style="font-size: 0.7rem; margin-left: 4px; opacity: 0.8;">.txt</span>
 		</div>
 		<div class="footer-right">v2.4</div>
@@ -390,7 +390,7 @@
     }
 
     function exportDoc() {
-      const name = fileNameInput.value.trim() || "Note";
+      const name = fileNameInput.value.trim() || "Untitled-Note";
       const blob = new Blob([editor.value], { type: 'text/plain' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
