@@ -28,7 +28,6 @@
 			font-family: 'Fira Code', monospace;
 			-webkit-font-smoothing: antialiased;
 			-moz-osx-font-smoothing: grayscale;
-			text-rendering: optimizeLegibility;
 		}
 
 		body {
@@ -38,7 +37,6 @@
 			display: flex;
 			flex-direction: column;
 			overflow: hidden;
-			font-weight: 400;
 		}
 
 		header {
@@ -57,10 +55,6 @@
 			color: var(--accent);
 			font-size: 1.35rem;
 			letter-spacing: -0.5px;
-			user-select: none;
-			text-shadow: var(--logo-glow);
-			transition: text-shadow 0.15s ease-out;
-			transform: translateZ(0);
 		}
 
 		.btn {
@@ -98,7 +92,6 @@
 			background: rgba(255, 50, 50, 0.8);
 			border-color: #ff3232;
 			color: white;
-			opacity: 1;
 		}
 
 		.editor-container {
@@ -109,19 +102,20 @@
 		}
 
 		.gutter {
-			min-width: 40px;
-			width: min-content;
+			min-width: 50px;
 			background: rgba(0, 0, 0, 0.1);
 			color: var(--text-gutter);
 			text-align: right;
-			padding: 20px 12px 0 15px;
-			font-weight: 400;
+			padding: 20px 12px;
 			font-size: 14px;
 			line-height: 1.6;
 			user-select: none;
 			border-right: 2px solid var(--ui-outline);
 			overflow: hidden;
-			white-space: nowrap;
+		}
+
+		.gutter div {
+			height: 1.6em;
 		}
 
 		.gutter div.active-line {
@@ -141,14 +135,13 @@
 			line-height: 1.6;
 			resize: none;
 			white-space: pre;
-			overflow-y: auto;
+			overflow-y: scroll;
 			caret-color: var(--text-main);
 			tab-size: 4;
 		}
 
 		#editor::placeholder {
 			color: var(--text-placeholder);
-			opacity: 1;
 		}
 
 		footer {
@@ -165,18 +158,17 @@
 		}
 
 		.footer-left {
-			justify-self: start;
+		justify-self: start;
 		}
-
+		
 		.footer-right {
-			justify-self: end;
-			opacity: 0.8;
+		justify-self: end;
+		opacity: 0.8;
 		}
 
 		.filename-container {
 			display: flex;
 			align-items: center;
-			background: transparent;
 			border: 1px solid var(--dynamic-outline);
 			padding: 2px 12px;
 			border-radius: 6px;
@@ -188,7 +180,7 @@
 			color: inherit;
 			font-weight: 700;
 			font-size: 0.85rem;
-			width: 220px;
+			width: 200px;
 			outline: none;
 			text-align: center;
 		}
@@ -198,6 +190,7 @@
 			position: absolute;
 			top: 65px;
 			right: 20px;
+			font-weight: 700;
 			background: var(--bg-ui);
 			color: var(--text-main);
 			border: 1px solid var(--dynamic-outline);
@@ -214,34 +207,15 @@
 			font-weight: 700;
 			text-decoration: underline;
 			text-underline-offset: 4px;
-			display: block;
-		}
-
-		label {
-			display: block;
-			font-size: 0.7rem;
-			margin-bottom: 6px;
-			font-weight: 600;
 		}
 
 		input[type="range"] {
 			width: 100%;
-			cursor: pointer;
 			accent-color: var(--accent);
 			background: var(--slider-contrast);
-			border-radius: 5px;
 			height: 6px;
 			appearance: none;
-			outline: none;
-		}
-
-		input[type="range"]::-webkit-slider-thumb {
-			appearance: none;
-			width: 14px;
-			height: 14px;
-			background: var(--text-main);
-			border-radius: 50%;
-			cursor: pointer;
+			border-radius: 5px;
 		}
 
 		.menu-item {
@@ -259,22 +233,19 @@
 		<div id="settingsMenu" onclick="event.stopPropagation()">
 			<div class="section-title">Appearance:</div>
 			<div class="menu-item">
-				<label>Theme color:</label>
-				<input type="color" id="accentInput" value="#007acc" style="width:100%; height:28px; border:none; border-radius:4px; background:none; cursor:pointer;">
+				<label style="font-size: 0.7rem; display: block; margin-bottom: 5px;">Theme color:</label>
+				<input type="color" id="accentInput" value="#007acc" style="width:100%; height:28px; border:none; border-radius:4px; cursor:pointer; background: none;">
       </div>
 				<div class="menu-item">
-					<label>UI brightness:</label>
+					<label style="font-size: 0.7rem; display: block; margin-bottom: 5px;">UI brightness:</label>
 					<input type="range" id="uiSlider" min="0" max="255" value="30">
       </div>
-
 					<button class="btn danger" onclick="resetTheme()">Reset Theme</button>
-
 					<hr style="border:0; height:1px; background:var(--dynamic-outline); margin:15px 0;">
-
 					<div class="section-title">File Options:</div>
 					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-						<button class="btn secondary" style="padding: 6px;" onclick="importDoc()">Import</button>
-						<button class="btn secondary" style="padding: 6px;" onclick="exportDoc()">Export</button>
+						<button class="btn secondary" onclick="importDoc()">Import</button>
+						<button class="btn secondary" onclick="exportDoc()">Export</button>
 					</div>
 				</div>
 	</header>
@@ -285,14 +256,12 @@
 	</div>
 
 	<footer>
-		<div class="footer-left">
-			<div id="stats">Lines: 1 | Chars: 0</div>
-		</div>
+		<div class="footer-left" id="stats">Lines: 1 | Chars: 0</div>
 		<div class="filename-container">
-			<input type="text" id="fileNameInput" spellcheck="false" autocomplete="off" placeholder="Untitled-Note" value="Untitled-Note">
+			<input type="text" id="fileNameInput" spellcheck="false" value="Untitled-Note">
 			<span style="font-size: 0.7rem; margin-left: 4px; opacity: 0.8;">.txt</span>
 		</div>
-		<div class="footer-right">v2.4</div>
+		<div class="footer-right" >v2.4</div>
 	</footer>
 
 	<script>
@@ -304,8 +273,10 @@
     function updateEditor() {
       const val = editor.value;
       const lines = val.split('\n');
+      
       const cursorPosition = editor.selectionStart;
-      const currentLine = val.substr(0, cursorPosition).split('\n').length;
+      const textBeforeCursor = val.substring(0, cursorPosition);
+      const currentLine = textBeforeCursor.split('\n').length;
 
       let nums = '';
       for (let i = 1; i <= lines.length; i++) {
@@ -315,12 +286,21 @@
 
       gutter.innerHTML = nums;
       document.getElementById('stats').innerText = `Lines: ${lines.length} | Chars: ${val.length}`;
+      
       localStorage.setItem('op_content_simple', val);
       localStorage.setItem('op_filename', fileNameInput.value);
+      
+      syncScroll();
     }
 
-    editor.oninput = editor.onclick = editor.onkeyup = updateEditor;
-    editor.onscroll = () => { gutter.scrollTop = editor.scrollTop; };
+    function syncScroll() {
+      gutter.scrollTop = editor.scrollTop;
+    }
+
+    editor.oninput = updateEditor;
+    editor.onclick = updateEditor;
+    editor.onkeyup = updateEditor;
+    editor.onscroll = syncScroll;
 
     editor.addEventListener('keydown', function(e) {
       if (e.key === 'Tab') {
@@ -338,12 +318,7 @@
       settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block';
     }
 
-    function hexToRgb(hex) {
-      const r = parseInt(hex.slice(1, 3), 16);
-      const g = parseInt(hex.slice(3, 5), 16);
-      const b = parseInt(hex.slice(5, 7), 16);
-      return { r, g, b };
-    }
+    window.onclick = () => settingsMenu.style.display = 'none';
 
     function applyTheme() {
       const acc = document.getElementById('accentInput').value;
@@ -352,28 +327,12 @@
       document.documentElement.style.setProperty('--accent', acc);
       document.documentElement.style.setProperty('--bg-ui', `rgb(${uiV},${uiV},${uiV})`);
 
-      const contrastColor = uiV > 130 ? '#000000' : '#ffffff';
-      const secondaryText = uiV > 130 ? '#1a1a1a' : '#d4d4d4';
-      const contrastBg = uiV > 130 ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.2)';
-      const placeholder = uiV > 130 ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.3)';
-      
-      document.documentElement.style.setProperty('--text-main', secondaryText);
-      document.documentElement.style.setProperty('--ui-outline', contrastColor);
-      document.documentElement.style.setProperty('--active-line-text', contrastColor);
-      document.documentElement.style.setProperty('--slider-contrast', contrastBg);
-      document.documentElement.style.setProperty('--btn-secondary-bg', contrastBg);
-      document.documentElement.style.setProperty('--text-placeholder', placeholder);
-      document.documentElement.style.setProperty('--dynamic-outline', uiV > 130 ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)');
-
-      const accRgb = hexToRgb(acc);
-      const colorDist = Math.abs(accRgb.r - uiV) + Math.abs(accRgb.g - uiV) + Math.abs(accRgb.b - uiV);
-
-      if (colorDist < 135) {
-        const shadowColor = uiV > 130 ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.4)';
-        document.documentElement.style.setProperty('--logo-glow', `1px 1px 0px ${shadowColor}, -1px -1px 0px ${shadowColor}, 0 0 8px ${shadowColor}`);
-      } else {
-        document.documentElement.style.setProperty('--logo-glow', 'none');
-      }
+      const isLight = uiV > 130;
+      document.documentElement.style.setProperty('--text-main', isLight ? '#1a1a1a' : '#d4d4d4');
+      document.documentElement.style.setProperty('--ui-outline', isLight ? '#000000' : '#ffffff');
+      document.documentElement.style.setProperty('--active-line-text', isLight ? '#000000' : '#ffffff');
+      document.documentElement.style.setProperty('--text-placeholder', isLight ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)');
+      document.documentElement.style.setProperty('--dynamic-outline', isLight ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)');
 
       localStorage.setItem('op_theme_accent', acc);
       localStorage.setItem('op_theme_ui_val', uiV);
@@ -381,13 +340,14 @@
 
     function resetTheme() {
       if (confirm("Reset theme to default?")) {
-        localStorage.removeItem('op_theme_accent');
-        localStorage.removeItem('op_theme_ui_val');
         document.getElementById('accentInput').value = "#007acc";
         document.getElementById('uiSlider').value = "30";
         applyTheme();
       }
     }
+
+    document.getElementById('accentInput').addEventListener('input', applyTheme);
+    document.getElementById('uiSlider').addEventListener('input', applyTheme);
 
     function exportDoc() {
       const name = fileNameInput.value.trim() || "Untitled-Note";
@@ -414,10 +374,6 @@
       input.click();
     }
 
-    window.onclick = () => settingsMenu.style.display = 'none';
-    document.getElementById('accentInput').addEventListener('input', applyTheme);
-    document.getElementById('uiSlider').addEventListener('input', applyTheme);
-
     window.onload = () => {
       const savedText = localStorage.getItem('op_content_simple');
       const savedName = localStorage.getItem('op_filename');
@@ -426,7 +382,6 @@
 
       const savedAccent = localStorage.getItem('op_theme_accent');
       const savedUiVal = localStorage.getItem('op_theme_ui_val');
-
       if (savedAccent) document.getElementById('accentInput').value = savedAccent;
       if (savedUiVal) document.getElementById('uiSlider').value = savedUiVal;
 
