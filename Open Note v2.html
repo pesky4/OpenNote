@@ -155,12 +155,13 @@
 				background: var(--bg-ui);
 				color: var(--text-main);
 				display: grid;
-				grid-template-columns: 1fr auto 1fr;
+				grid-template-columns: 120px 1fr 120px;
 				align-items: center;
 				padding: 0 20px;
 				font-size: 0.8rem;
 				font-weight: 700;
 				border-top: 2px solid var(--ui-outline);
+				gap: 15px;
 			}
 
 			.footer-left {
@@ -175,12 +176,16 @@
 			.filename-container {
 				display: flex;
 				align-items: center;
+				background: transparent;
 				border: 1px solid var(--dynamic-outline);
 				padding: 2px 12px;
 				border-radius: 6px;
-				width: 100%;
-				max-width: 500px;
-				box-sizing: border-box;
+				width: -80%;
+				justify-content: center;
+			}
+
+			.filename-container:focus-within {
+				border-color: var(--accent);
 			}
 
 			.filename-container input {
@@ -189,10 +194,9 @@
 				color: inherit;
 				font-weight: 700;
 				font-size: 0.85rem;
-				flex: 1;
-				min-width: 300px;
+				width: 100%;
 				outline: none;
-				text-align: left;
+				text-align: center;
 			}
 
 			#settingsMenu {
@@ -267,7 +271,7 @@
 		</div>
 
 		<footer>
-			<div class="footer-left" id="stats">Lines: 1 | Chars: 0</div>
+			<div class="footer-left" id="stats">Lines: 1 Chars: 0</div>
 			<div class="filename-container">
 				<input type="text" id="fileNameInput" spellcheck="false" autocomplete="off" placeholder="Untitled-Note">
 				<span style="font-size: 0.7rem; margin-left: 4px; opacity: 0.8;">.txt</span>
@@ -296,7 +300,7 @@
       }
 
       gutter.innerHTML = nums;
-      document.getElementById('stats').innerText = `Lines: ${lines.length} | Chars: ${val.length}`;
+      document.getElementById('stats').innerText = `Lines: ${lines.length} ㅤ Chars: ${val.length}`;
       
       localStorage.setItem('op_content_simple', val);
       localStorage.setItem('op_filename', fileNameInput.value);
