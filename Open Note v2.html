@@ -1,271 +1,282 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Open Note</title>
-	<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
-	<style>
-		:root {
-			--accent: #007acc;
-			--bg-ui: #1e1e1e;
-			--text-main: #d4d4d4;
-			--text-gutter: #606060;
-			--active-line-text: #ffffff;
-			--ui-outline: #ffffff;
-			--dynamic-outline: rgba(255, 255, 255, 0.4);
-			--slider-contrast: rgba(255, 255, 255, 0.2);
-			--btn-secondary-bg: rgba(127, 127, 127, 0.2);
-			--text-placeholder: rgba(255, 255, 255, 0.3);
-			--logo-glow: none;
-		}
-
-		* {
-			box-sizing: border-box;
-			margin: 0;
-			padding: 0;
-			font-family: 'Fira Code', monospace;
-			-webkit-font-smoothing: antialiased;
-			-moz-osx-font-smoothing: grayscale;
-		}
-
-		body {
-			background: var(--bg-ui);
-			color: var(--text-main);
-			height: 100vh;
-			display: flex;
-			flex-direction: column;
-			overflow: hidden;
-		}
-
-		header {
-			height: 60px;
-			background: var(--bg-ui);
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			padding: 0 20px;
-			border-bottom: 2px solid var(--ui-outline);
-			z-index: 1001;
-		}
-
-		.logo {
-			font-weight: 700;
-			color: var(--accent);
-			font-size: 1.35rem;
-			letter-spacing: -0.5px;
-		}
-
-		.btn {
-			background: var(--accent);
-			color: #ffffff;
-			border: none;
-			padding: 8px 16px;
-			border-radius: 6px;
-			cursor: pointer;
-			font-weight: 600;
-			font-size: 0.85rem;
-			transition: all 0.2s;
-		}
-
-		.btn:hover {
-			opacity: 0.9;
-		}
-
-		.btn.secondary {
-			background: var(--btn-secondary-bg);
-			color: var(--text-main);
-		}
-
-		.btn.danger {
-			background: var(--btn-secondary-bg);
-			border: 1px solid var(--accent);
-			color: var(--text-main);
-			margin-top: 8px;
-			width: 100%;
-			padding: 6px;
-			font-size: 0.75rem;
-		}
-
-		.btn.danger:hover {
-			background: rgba(255, 50, 50, 0.8);
-			border-color: #ff3232;
-			color: white;
-		}
-
-		.editor-container {
-			flex: 1;
-			display: flex;
-			background: var(--bg-ui);
-			overflow: hidden;
-		}
-
-		.gutter {
-			min-width: 50px;
-			background: rgba(0, 0, 0, 0.1);
-			color: var(--text-gutter);
-			text-align: right;
-			padding: 20px 12px;
-			font-size: 14px;
-			line-height: 1.6;
-			user-select: none;
-			border-right: 2px solid var(--ui-outline);
-			overflow: hidden;
-		}
-
-		.gutter div {
-			height: 1.6em;
-		}
-
-		.gutter div.active-line {
-			color: var(--active-line-text);
-			font-weight: 700;
-		}
-
-		#editor {
-			flex: 1;
-			background: transparent;
-			color: var(--text-main);
-			border: none;
-			outline: none;
-			padding: 20px;
-			font-weight: 600;
-			font-size: 14px;
-			line-height: 1.6;
-			resize: none;
-			white-space: pre;
-			overflow-y: scroll;
-			caret-color: var(--text-main);
-			tab-size: 4;
-		}
-
-		#editor::placeholder {
-			color: var(--text-placeholder);
-		}
-
-		footer {
-			height: 40px;
-			background: var(--bg-ui);
-			color: var(--text-main);
-			display: grid;
-			grid-template-columns: 1fr auto 1fr;
-			align-items: center;
-			padding: 0 20px;
-			font-size: 0.8rem;
-			font-weight: 700;
-			border-top: 2px solid var(--ui-outline);
-		}
-
-		.footer-left {
-		justify-self: start;
-		}
-		
-		.footer-right {
-		justify-self: end;
-		opacity: 0.8;
-		}
-
-		.filename-container {
-			display: flex;
-			align-items: center;
-			border: 1px solid var(--dynamic-outline);
-			padding: 2px 12px;
-			border-radius: 6px;
-		}
-
-		.filename-container input {
-			background: transparent;
-			border: none;
-			color: inherit;
-			font-weight: 700;
-			font-size: 0.85rem;
-			width: 200px;
-			outline: none;
-			text-align: left;
-		}
-
-		#settingsMenu {
-			display: none;
-			position: absolute;
-			top: 65px;
-			right: 20px;
-			font-weight: 700;
-			background: var(--bg-ui);
-			color: var(--text-main);
-			border: 1px solid var(--dynamic-outline);
-			border-radius: 10px;
-			padding: 18px;
-			width: 240px;
-			z-index: 1000;
-			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-		}
-
-		.section-title {
-			font-size: 0.85rem;
-			margin-bottom: 12px;
-			font-weight: 700;
-			text-decoration: underline;
-			text-underline-offset: 4px;
-		}
-
-		input[type="range"] {
-			width: 100%;
-			accent-color: var(--accent);
-			background: var(--slider-contrast);
-			height: 6px;
-			appearance: none;
-			border-radius: 5px;
-		}
-
-		.menu-item {
-			margin-bottom: 10px;
-		}
-	</style>
-</head>
+<head></head>
 
 <body>
+	<!DOCTYPE html>
+	<html lang="en">
 
-	<header>
-		<div class="logo">Open Note</div>
-		<button class="btn secondary" onclick="toggleMenu(event)">Settings</button>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Open Note</title>
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+		<style>
+			:root {
+				--accent: #007acc;
+				--bg-ui: #1e1e1e;
+				--text-main: #d4d4d4;
+				--text-gutter: #606060;
+				--active-line-text: #ffffff;
+				--ui-outline: #ffffff;
+				--dynamic-outline: rgba(255, 255, 255, 0.4);
+				--slider-contrast: rgba(255, 255, 255, 0.2);
+				--btn-secondary-bg: rgba(127, 127, 127, 0.2);
+				--text-placeholder: rgba(255, 255, 255, 0.3);
+				--logo-glow: none;
+			}
 
-		<div id="settingsMenu" onclick="event.stopPropagation()">
-			<div class="section-title">Appearance:</div>
-			<div class="menu-item">
-				<label style="font-size: 0.7rem; display: block; margin-bottom: 5px;">Theme color:</label>
-				<input type="color" id="accentInput" value="#007acc" style="width:100%; height:28px; border:none; border-radius:4px; cursor:pointer; background: none;">
-      </div>
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+				font-family: 'Fira Code', monospace;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+			}
+
+			body {
+				background: var(--bg-ui);
+				color: var(--text-main);
+				height: 100vh;
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+			}
+
+			header {
+				height: 60px;
+				background: var(--bg-ui);
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 0 20px;
+				border-bottom: 2px solid var(--ui-outline);
+				z-index: 1001;
+			}
+
+			.logo {
+				font-weight: 700;
+				color: var(--accent);
+				font-size: 1.35rem;
+				letter-spacing: -0.5px;
+			}
+
+			.btn {
+				background: var(--accent);
+				color: #ffffff;
+				border: none;
+				padding: 8px 16px;
+				border-radius: 6px;
+				cursor: pointer;
+				font-weight: 600;
+				font-size: 0.85rem;
+				transition: all 0.2s;
+			}
+
+			.btn:hover {
+				opacity: 0.9;
+			}
+
+			.btn.secondary {
+				background: var(--btn-secondary-bg);
+				color: var(--text-main);
+			}
+
+			.btn.danger {
+				background: var(--btn-secondary-bg);
+				border: 1px solid var(--accent);
+				color: var(--text-main);
+				margin-top: 8px;
+				width: 100%;
+				padding: 6px;
+				font-size: 0.75rem;
+			}
+
+			.btn.danger:hover {
+				background: rgba(255, 50, 50, 0.8);
+				border-color: #ff3232;
+				color: white;
+			}
+
+			.editor-container {
+				flex: 1;
+				display: flex;
+				background: var(--bg-ui);
+				overflow: hidden;
+			}
+
+			.gutter {
+				min-width: 50px;
+				background: rgba(0, 0, 0, 0.1);
+				color: var(--text-gutter);
+				text-align: right;
+				padding: 20px 12px;
+				font-size: 14px;
+				line-height: 1.6;
+				user-select: none;
+				border-right: 2px solid var(--ui-outline);
+				overflow: hidden;
+			}
+
+			.gutter div {
+				height: 1.6em;
+			}
+
+			.gutter div.active-line {
+				color: var(--active-line-text);
+				font-weight: 700;
+			}
+
+			#editor {
+				flex: 1;
+				background: transparent;
+				color: var(--text-main);
+				border: none;
+				outline: none;
+				padding: 20px;
+				font-weight: 600;
+				font-size: 14px;
+				line-height: 1.6;
+				resize: none;
+				white-space: pre;
+				overflow-y: scroll;
+				caret-color: var(--text-main);
+				tab-size: 4;
+			}
+
+			#editor::placeholder {
+				color: var(--text-placeholder);
+			}
+
+			footer {
+				height: 40px;
+				background: var(--bg-ui);
+				color: var(--text-main);
+				display: grid;
+				grid-template-columns: 1fr auto 1fr;
+				align-items: center;
+				padding: 0 20px;
+				font-size: 0.8rem;
+				font-weight: 700;
+				border-top: 2px solid var(--ui-outline);
+			}
+
+			.footer-left {
+				justify-self: start;
+			}
+
+			.footer-right {
+				justify-self: end;
+				opacity: 0.8;
+			}
+
+			.filename-container {
+				display: flex;
+				align-items: center;
+				border: 1px solid var(--dynamic-outline);
+				padding: 2px 12px;
+				border-radius: 6px;
+				width: 100%;
+				max-width: 500px;
+				box-sizing: border-box;
+			}
+
+			.filename-container input {
+				background: transparent;
+				border: none;
+				color: inherit;
+				font-weight: 700;
+				font-size: 0.85rem;
+				flex: 1;
+				min-width: 300px;
+				outline: none;
+				text-align: left;
+			}
+
+			#settingsMenu {
+				display: none;
+				position: absolute;
+				top: 65px;
+				right: 20px;
+				font-weight: 700;
+				background: var(--bg-ui);
+				color: var(--text-main);
+				border: 1px solid var(--dynamic-outline);
+				border-radius: 10px;
+				padding: 18px;
+				width: 240px;
+				z-index: 1000;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+			}
+
+			.section-title {
+				font-size: 0.85rem;
+				margin-bottom: 12px;
+				font-weight: 700;
+				text-decoration: underline;
+				text-underline-offset: 4px;
+			}
+
+			input[type="range"] {
+				width: 100%;
+				accent-color: var(--accent);
+				background: var(--slider-contrast);
+				height: 6px;
+				appearance: none;
+				border-radius: 5px;
+			}
+
+			.menu-item {
+				margin-bottom: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<header>
+			<div class="logo">Open Note</div>
+			<button class="btn secondary" onclick="toggleMenu(event)">Settings</button>
+
+			<div id="settingsMenu" onclick="event.stopPropagation()">
+				<div class="section-title">Appearance:</div>
 				<div class="menu-item">
-					<label style="font-size: 0.7rem; display: block; margin-bottom: 5px;">UI brightness:</label>
-					<input type="range" id="uiSlider" min="0" max="255" value="30">
+					<label style="font-size: 0.7rem; display: block; margin-bottom: 5px;">Theme color:</label>
+					<input type="color" id="accentInput" value="#007acc" style="width:100%; height:28px; border:none; border-radius:4px; cursor:pointer; background: none;">
       </div>
-					<button class="btn danger" onclick="resetTheme()">Reset Theme</button>
-					<hr style="border:0; height:1px; background:var(--dynamic-outline); margin:15px 0;">
-					<div class="section-title">File Options:</div>
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-						<button class="btn secondary" onclick="importDoc()">Import</button>
-						<button class="btn secondary" onclick="exportDoc()">Export</button>
+					<div class="menu-item">
+						<label style="font-size: 0.7rem; display: block; margin-bottom: 5px;">UI brightness:</label>
+						<input type="range" id="uiSlider" min="0" max="255" value="30">
+      </div>
+						<button class="btn danger" onclick="resetTheme()">Reset Theme</button>
+						<button class="btn danger" onclick="clearDocument()">Clear Document</button>
+						<hr style="border:0; height:1px; background:var(--dynamic-outline); margin:15px 0;">
+						<div class="section-title">File Options:</div>
+						<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+							<button class="btn secondary" onclick="importDoc()">Import</button>
+							<button class="btn secondary" onclick="exportDoc()">Export</button>
+						</div>
 					</div>
-				</div>
-	</header>
+		</header>
 
-	<div class="editor-container">
-		<div class="gutter" id="gutter"></div>
-		<textarea id="editor" spellcheck="false" placeholder="Start typing..."></textarea>
-	</div>
-
-	<footer>
-		<div class="footer-left" id="stats">Lines: 1 | Chars: 0</div>
-		<div class="filename-container">
-			<input type="text" id="fileNameInput" spellcheck="false" autocomplete="off" placeholder="Untitled-Note">
-			<span style="font-size: 0.7rem; margin-left: 4px; opacity: 0.8;">.txt</span>
+		<div class="editor-container">
+			<div class="gutter" id="gutter"></div>
+			<textarea id="editor" spellcheck="false" placeholder="Start typing..."></textarea>
 		</div>
-		<div class="footer-right" >v2.4</div>
-	</footer>
 
-	<script>
-		const editor = document.getElementById('editor');
+		<footer>
+			<div class="footer-left" id="stats">Lines: 1 | Chars: 0</div>
+			<div class="filename-container">
+				<input type="text" id="fileNameInput" spellcheck="false" autocomplete="off" placeholder="Untitled-Note">
+				<span style="font-size: 0.7rem; margin-left: 4px; opacity: 0.8;">.txt</span>
+			</div>
+			<div class="footer-right">v2.4</div>
+		</footer>
+
+		<script>
+			const editor = document.getElementById('editor');
     const gutter = document.getElementById('gutter');
     const fileNameInput = document.getElementById('fileNameInput');
     const settingsMenu = document.getElementById('settingsMenu');
@@ -374,6 +385,15 @@
       input.click();
     }
 
+	  function clearDocument() {
+    	if (confirm("Are you sure? This will delete all text and reset the filename.")) {
+      	editor.value = '';
+	      fileNameInput.value = 'Untitled-Note';
+	      updateEditor();
+	    	settingsMenu.style.display = 'none';
+	    }
+	  }
+
     window.onload = () => {
       const savedText = localStorage.getItem('op_content_simple');
       const savedName = localStorage.getItem('op_filename');
@@ -388,7 +408,11 @@
       applyTheme();
       updateEditor();
     };
-	</script>
-</body>
 
-</html>
+    
+		</script>
+	</body>
+
+	</html>
+</body>
+<html>
