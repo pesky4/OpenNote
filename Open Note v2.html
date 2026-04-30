@@ -1,4 +1,4 @@
-<!doctype html><html><head></head><body><!doctype html>
+<!doctype html>
 <html>
 
 <head></head>
@@ -81,7 +81,17 @@
 
 			.btn.secondary {
 				background: var(--btn-secondary-bg);
+				border: 1px solid var(--accent);
 				color: var(--text-main);
+				margin-top: 8px;
+				width: 100%;
+				padding: 6px;
+				font-size: 0.75rem;
+			}
+
+			  .btn.secondary:hover {
+			  background: var(--accent);
+		  	color: white;
 			}
 
 			.btn.danger {
@@ -94,7 +104,7 @@
 				font-size: 0.75rem;
 			}
 
-			.btn.danger:hover {
+    		.btn.danger:hover {
 				background: rgba(255, 50, 50, 0.8);
 				border-color: #ff3232;
 				color: white;
@@ -258,7 +268,7 @@
 
 		<header>
 			<div class="logo">Open Note</div>
-			<button class="btn secondary" onclick="toggleMenu(event)">Settings</button>
+			<button class="btn secondary" onclick="toggleMenu(event)" style="width:100px">Settings</button>
 
 			<div id="settingsMenu" onclick="event.stopPropagation()">
 				<div class="section-title">Appearance:</div>
@@ -277,8 +287,9 @@
 						<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
 							<button class="btn secondary" onclick="importDoc()">Import</button>
 							<button class="btn secondary" onclick="exportDoc()">Export</button>
-						</div>
+	        		<a href="https://github.com/pesky4/OpenNote" target="_blank" style="text-decoration: none;">
 					</div>
+				<button type="button" class="btn secondary">Check For Updates</button></a>
 		</header>
 
 		<div class="editor-container">
@@ -435,4 +446,4 @@
 
 	</html>
 </body>
-<html></body><html>
+<html>
