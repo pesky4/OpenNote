@@ -89,9 +89,9 @@
 				font-size: 0.75rem;
 			}
 
-			  .btn.secondary:hover {
-			  background: var(--accent);
-		  	color: white;
+			.btn.secondary:hover {
+				background: var(--accent);
+				color: white;
 			}
 
 			.btn.danger {
@@ -104,7 +104,7 @@
 				font-size: 0.75rem;
 			}
 
-    		.btn.danger:hover {
+			.btn.danger:hover {
 				background: rgba(255, 50, 50, 0.8);
 				border-color: #ff3232;
 				color: white;
@@ -287,9 +287,9 @@
 						<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
 							<button class="btn secondary" onclick="importDoc()">Import</button>
 							<button class="btn secondary" onclick="exportDoc()">Export</button>
-	        		<a href="https://github.com/pesky4/OpenNote" target="_blank" style="text-decoration: none;">
-					</div>
-				<button type="button" class="btn secondary">Check For Updates</button></a>
+							<a href="https://github.com/pesky4/OpenNote" target="_blank" style="text-decoration: none;">
+						</div>
+						<button type="button" class="btn secondary">Check For Updates</button></a>
 		</header>
 
 		<div class="editor-container">
@@ -327,8 +327,8 @@
       }
 
       gutter.innerHTML = nums;
-      document.getElementById('stats').innerText = `Lines: ${lines.length} ㅤㅤㅤ Chars: ${val.length}`;
-      
+			document.getElementById('stats').innerHTML = `<div style="line-height: 1.3;">Lines:
+				${lines.length}<br>Chars: ${val.length}</div>`;
       localStorage.setItem('op_content_simple', val);
       localStorage.setItem('op_filename', fileNameInput.value);
       
